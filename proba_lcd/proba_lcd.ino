@@ -17,6 +17,9 @@ int len = 0;
 int pos = 0;
 int btn = 0;
 
+int seconds = 0;
+int lucka = 0;
+
 void setup()
 {
   // initialize the LCD
@@ -30,9 +33,11 @@ void setup()
   Serial.begin(9600);
 
   letters = (char*) malloc (64 * sizeof(char));
-  letters[0] = 0;
+  sprintf(letters, "Tole je eno dolgo sporocilo.");
+  len = 28;
 
   pinMode(2, INPUT);
+  pinMode(10, OUTPUT);
 
 }
 
@@ -69,7 +74,18 @@ void loop() {
   // (note: line 1 is the second row, since counting begins with 0):
   lcd.setCursor(0, 1);
   // print the number of seconds since reset:
-  lcd.print(millis() / 1000);
+  int sec_tmp = millis() / 1000;
+  if (sec_tmp > seconds) {
+    lucka = (lucka + 1) % 2;
+    if (lucka)
+      digitalWrite(10, HIGH); // ledica na pinu 10
+    else
+      digitalWrite(10, LOW);
+  }
+  seconds = sec_tmp;
+  lcd.print(seconds);
+
+  
   lcd.print(" ");
   lcd.print(btn);
   lcd.print(" ");
